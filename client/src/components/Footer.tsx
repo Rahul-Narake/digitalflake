@@ -1,0 +1,14 @@
+function Footer() {
+  return (
+    <div className="flex absolute bottom-2 w-[80vw]">
+      <div className="right-2 absolute flex space-x-2">
+        <button className=" bg-gray-300 rounded-full py-2 px-8">Cancel</button>
+        <button className="bg-[#7c0089] rounded-full py-2 px-8 text-gray-50">
+          Save
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default Footer;
