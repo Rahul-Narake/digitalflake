@@ -25,7 +25,6 @@ const protectRoute = async (
 ) => {
   try {
     const token = req.cookies?.jwt;
-    console.log(token);
 
     if (!token || token === undefined) {
       throw new ApiError(401, 'Unauthorized');
@@ -34,7 +33,6 @@ const protectRoute = async (
       token,
       process.env.JWT_SECRET!
     )) as DecodeToken;
-    console.log(decodedData);
     if (!decodedData) {
       throw new ApiError(403, 'forbidden');
     }

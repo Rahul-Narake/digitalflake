@@ -36,6 +36,9 @@ const SignIn: React.FC = () => {
         <h2 className="text-2xl font-semibold text-center text-gray-800">
           Sign In
         </h2>
+        <p className="text-sm text-slate-400 text-center">
+          Welcome to Digitalflake admin
+        </p>
         <form onSubmit={handleSubmit} className="mt-6">
           <div className="mb-4">
             <label
@@ -79,6 +82,16 @@ const SignIn: React.FC = () => {
             Sign In
           </button>
         </form>
+        <p className="mt-2 text-sm text-gray-600 text-end">
+          <p
+            onClick={() => {
+              alert('Not implemented yet');
+            }}
+            className="text-[#7c0089] hover:underline"
+          >
+            Forgot Password
+          </p>
+        </p>
         <p className="mt-4 text-sm text-gray-600 text-center">
           Don't have an account?{' '}
           <a href="/signup" className="text-[#7c0089] hover:underline">

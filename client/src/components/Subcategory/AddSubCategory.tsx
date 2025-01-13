@@ -1,24 +1,31 @@
 import { useRef, useState } from 'react';
 import BackButton from '../BackButton';
 import Footer from '../Footer';
-import InputBox from '../InputBox';
-import { useNavigate } from 'react-router';
+import { useAppSelector } from '@/slices/hook';
+import useAddSubcategory from '@/hooks/useAddSubcategory';
 
 function AddSubcategory() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [profile, setProfile] = useState<File | null>(null);
+  const categories = useAppSelector((state) => state.category.categories);
+  const [name, setName] = useState('');
+  const [subcategoryImage, setSubcategoryImage] = useState<File | null>(null);
+  const [category, setCategory] = useState(
+    categories.length > 0 ? categories[0]?.id : ''
+  );
   const fileTypes = ['image/jpeg', 'image/png'];
-  const [profilePic, setProfilePic] = useState<string | null>('');
-  const navigate = useNavigate();
+  const [image, setImage] = useState<string | null>('');
+
+  const { addSubcategory, loading } = useAddSubcategory();
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && fileTypes.includes(file.type) && file.size <= 1000000) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProfilePic(reader.result as string);
+        setImage(reader.result as string);
       };
       reader.readAsDataURL(file);
-      setProfile(file);
+      setSubcategoryImage(file);
     } else {
       alert(
         'File format not supported, should be JPEG/PNG and size shoUld be less than 1 MB'
@@ -29,23 +36,57 @@ function AddSubcategory() {
   const handleClick = () => {
     fileInputRef.current?.click();
   };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!name || !subcategoryImage) {
+      return;
+    }
+
+    const subcategory = await addSubcategory({
+      name,
+      category: category!,
+      subcategoryImage,
+    });
+    if (subcategory) {
+      setName('');
+      setSubcategoryImage(null);
+    }
+  };
   return (
     <div className="flex flex-col w-full h-[85vh]">
       <div className="mb-8">
         <BackButton name="Add Subcategory" />
       </div>
       <form className="flex justify-start p-4">
-        <InputBox
-          type="text"
-          name="subcategory"
-          onchange={() => {}}
-          placeholder="Subcategory Name"
-        />
+        <div className="flex flex-col w-[200px] border border-gray-[2px] p-2 rounded-lg h-[50px]">
+          <input
+            type="text"
+            id={name}
+            name={name}
+            value={name}
+            className="outline-none border-none"
+            placeholder={'Subcategory Name'}
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+          />
+        </div>
         <div className="flex flex-col w-[200px] border border-gray-[2px] p-2 rounded-lg h-[50px] ml-2">
-          <select name="category" id="category" className="w-full">
-            <option value="">name</option>
-            <option value="">name</option>
-            <option value="">name</option>
+          <select
+            name="category"
+            id="category"
+            className="w-full"
+            onChange={(e) => {
+              setCategory(e.target.value);
+            }}
+          >
+            {categories &&
+              categories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
           </select>
         </div>
         <div className="flex items-center justify-start mx-2">
@@ -54,9 +95,9 @@ function AddSubcategory() {
               className="w-[150px] h-[150px] rounded-md bg-gray-200 flex items-center justify-center cursor-pointer overflow-hidden relative border-2 border-gray-300"
               onClick={handleClick}
             >
-              {profilePic ? (
+              {image ? (
                 <img
-                  src={profilePic}
+                  src={image}
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
@@ -83,7 +124,7 @@ function AddSubcategory() {
           Upload maximum allowed size is 2 MB
         </div>
       </form>
-      <Footer />
+      <Footer onclick={handleSubmit} loading={loading} />
     </div>
   );
 }

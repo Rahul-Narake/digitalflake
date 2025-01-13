@@ -14,7 +14,7 @@ function RootLayout() {
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);
-      //navigate('/signin');
+      navigate('/signin');
     }
   }, []);
   return (

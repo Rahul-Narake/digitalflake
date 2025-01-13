@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { DialogClose } from '@radix-ui/react-dialog';
 
@@ -13,7 +12,7 @@ export function Dialoge({
     <Dialog>
       <DialogClose />
       <DialogTrigger asChild>
-        <Button variant="outline">{buttonText ? buttonText : 'Profile'}</Button>
+        <div>{buttonText ? buttonText : 'icon'}</div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">{children}</DialogContent>
     </Dialog>

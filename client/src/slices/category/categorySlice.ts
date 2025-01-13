@@ -6,10 +6,10 @@ export enum Status {
 }
 
 export interface ICategory {
-  id: string;
+  id?: string;
   name: string;
   image: string;
-  status: Status;
+  status?: Status;
 }
 
 type CategoryStateType = {

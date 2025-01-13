@@ -4,9 +4,11 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { useAppDispatch, useAppSelector } from '@/slices/hook';
 import { setCategories } from '@/slices/category/categorySlice';
+import { Dialoge } from '../Dialoge';
+import DeleteDialog from '../DeleteDialog';
 
 function Category() {
-  const categories = useAppSelector((state) => state.category.categories);
+  const { categories } = useAppSelector((state) => state.category);
   const dispatch = useAppDispatch();
   useEffect(() => {
     const getCategories = async () => {
@@ -16,7 +18,6 @@ function Category() {
       return data.data;
     };
     getCategories().then((d) => {
-      console.log(d);
       dispatch(setCategories(d));
     });
   }, []);
@@ -29,7 +30,7 @@ function Category() {
         <div className="overflow-x-auto p-4">
           <table className="min-w-full bg-white border border-gray-200">
             <thead>
-              <tr className="bg-gray-100 text-left">
+              <tr className="bg-yellow-100 text-left">
                 <th className="py-2 px-4 border-b border-gray-200">ID</th>
                 <th className="py-2 px-4 border-b border-gray-200">Name</th>
                 <th className="py-2 px-4 border-b border-gray-200">Image</th>
@@ -64,13 +65,32 @@ function Category() {
                       {item.status}
                     </span>
                   </td>
-                  <td className="py-2 px-4 border-b border-gray-200">
-                    <button className="px-3 py-1 text-gray-500 ">
+                  <td className="py-2 px-4 border-b border-gray-200 flex items-center justify-start">
+                    <div className="px-3 py-1 text-gray-500 ">
                       <FilePenLine />
-                    </button>
-                    <button className="ml-2 px-3 py-1 text-gray-500 ">
-                      <Trash />
-                    </button>
+                    </div>
+                    <div className="ml-2 px-3 py-1 pt-0 text-gray-500">
+                      <Dialoge
+                        buttonText={<Trash />}
+                        children={
+                          <DeleteDialog
+                            onConfirm={async () => {
+                              const { data } = await axios.delete(
+                                `${import.meta.env.VITE_BASE_URL}/category/${
+                                  item.id
+                                }`
+                              );
+                              if (data.success) {
+                                const updatedCategories = categories.filter(
+                                  (c) => c.id !== item.id
+                                );
+                                dispatch(setCategories(updatedCategories));
+                              }
+                            }}
+                          />
+                        }
+                      />
+                    </div>
                   </td>
                 </tr>
               ))}

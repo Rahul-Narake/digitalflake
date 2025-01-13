@@ -9,7 +9,7 @@ function SidebarComponent({ data }: { data: TSidebarComponent }) {
   return (
     <div
       className={`flex items-center justify-between w-full cursor-pointer p-2 ${
-        location.pathname == data.path ? 'bg-yellow-200 rounded-md' : ''
+        location.pathname == data.path ? 'bg-yellow-100 rounded-md' : ''
       }`}
       onClick={() => {
         navigate(data.path);

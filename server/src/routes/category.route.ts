@@ -12,7 +12,7 @@ const router = express.Router();
 router
   .route('/')
   .post(protectRoute, upload.single('categoryImage'), addCategoryHandler)
-  .get(protectRoute, getAllCategoryHandler);
+  .get(getAllCategoryHandler);
 
 router
   .route('/:id')
